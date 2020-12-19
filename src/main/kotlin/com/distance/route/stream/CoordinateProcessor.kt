@@ -95,7 +95,7 @@ class CoordinateProcessor(
 
     }
 
-    @Scheduled(fixedDelay = 1000, initialDelay = 10000)
+    @Scheduled(fixedDelay = 10000, initialDelay = 5000)
     fun consumeCoordinates(){
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
@@ -270,7 +270,7 @@ class CoordinateProcessor(
 
         log.info("Iniciate send coordinates")
         listCoordinates.forEach{
-            Thread.sleep(500)
+            Thread.sleep(200)
             receiveCoordinate(it)
         }
     }
