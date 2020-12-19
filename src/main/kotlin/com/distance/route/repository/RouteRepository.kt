@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface RouteRepository: JpaRepository<Route, Int>{
     fun getRouteByEquipment_Id(equipmentId:Int):Optional<Route>
+    fun getRouteByMobileEquipment_Id(equipmentId:Int):Optional<Route>
 }

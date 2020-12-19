@@ -7,4 +7,5 @@ import java.util.*
 interface LastCoordinateRepository:JpaRepository<LastCoordinate,Int> {
 
     fun getLastCoordinateByEquipment_Id(id:Int):Optional<LastCoordinate>
+
 }

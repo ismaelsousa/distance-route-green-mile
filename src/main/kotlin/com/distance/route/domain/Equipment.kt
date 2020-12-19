@@ -1,5 +1,6 @@
 package com.distance.route.domain
 
+import com.distance.route.domain.enum.EquipmentType
 import javax.persistence.Entity
 import javax.persistence.Id
 
@@ -7,5 +8,5 @@ import javax.persistence.Id
 data class Equipment(
         @Id
         val id:Int,
-        val name:String?=null
+        val type: EquipmentType?=null
 )
