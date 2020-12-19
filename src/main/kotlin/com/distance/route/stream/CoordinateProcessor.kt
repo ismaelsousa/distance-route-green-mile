@@ -31,16 +31,35 @@ class CoordinateProcessor(
         log.info("Coordinate received: [{}] ", coordinate)
         val routeMobile = routeRepository.getRouteByMobileEquipment_Id((coordinate.equipmentId))
 
+        /*
+        * Verifica se tem rota com aquele mobile
+        * Se tiver ver se existe alguma coordenada para ele e atualiza
+        * Se n tiver criar
+        *
+        */
         if(routeMobile.isPresent) {
 
             val existLastMobile = lastCoordinateMobileRepository.getLastCoordinateMobileByMobileEquipment_Id(coordinate.equipmentId)
+
+
             if(existLastMobile.isPresent){
-               log.info("Tinha ----------> [{}]", routeMobile)
+                val lastMobiles = existLastMobile.get()
+                val updateLastMobile = LastCoordinateMobile(
+                        id = lastMobiles.id,
+                        mobileEquipment = lastMobiles.mobileEquipment,
+                        latitude = coordinate.latitude,
+                        longitude = coordinate.longitude,
+                        `when` = coordinate.datePing,
+                        route = routeMobile.get()
+                        )
+                lastCoordinateMobileRepository.save(updateLastMobile)
+                updateLastMobile
+                log.info("Atualizou coordenada do Mobile ----------> [{}]", updateLastMobile)
             }else{
                 val route = routeMobile.get()
                 val newLast = LastCoordinateMobile(null, route.mobileEquipment, latitude = coordinate.latitude, longitude = coordinate.longitude,route = route, `when` = Date())
                 lastCoordinateMobileRepository.save(newLast)
-                log.info("Criou ----------> [{}]", routeMobile)
+                log.info("Criou  coordenada do Mobile ----------> [{}]", routeMobile)
             }
 
 
