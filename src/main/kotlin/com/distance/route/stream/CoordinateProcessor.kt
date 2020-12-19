@@ -5,6 +5,7 @@ import com.distance.route.domain.Equipment
 import com.distance.route.domain.LastCoordinate
 import com.distance.route.domain.LastCoordinateMobile
 import com.distance.route.event.EventArrival
+import com.distance.route.event.EventAwayEquipment
 import com.distance.route.repository.LastCoordinateMobileRepository
 import com.distance.route.repository.LastCoordinateRepository
 import com.distance.route.repository.RouteRepository
@@ -20,7 +21,8 @@ class CoordinateProcessor(
         private val routeRepository: RouteRepository,
         private val lastCoordinateRepository: LastCoordinateRepository,
         private val lastCoordinateMobileRepository: LastCoordinateMobileRepository,
-        private val eventArrival: EventArrival
+        private val eventArrival: EventArrival,
+        private val eventAwayEquipment: EventAwayEquipment
 ):Observable() {
 
     private  val log = LoggerFactory.getLogger(CoordinateProcessor::class.java)
@@ -28,7 +30,7 @@ class CoordinateProcessor(
     * Está recebendo dados do kafka
     * */
     fun receiveCoordinate(coordinate: Coordinate){
-        log.info("Coordinate received: [{}] ", coordinate)
+        // log.info("Coordinate received: [{}] ", coordinate)
         val routeMobile = routeRepository.getRouteByMobileEquipment_Id((coordinate.equipmentId))
 
         /*
@@ -40,9 +42,9 @@ class CoordinateProcessor(
         if(routeMobile.isPresent) {
 
             val existLastMobile = lastCoordinateMobileRepository.getLastCoordinateMobileByMobileEquipment_Id(coordinate.equipmentId)
+            val lastCoordinate =  lastCoordinateRepository.getLastCoordinateByEquipment_Id(routeMobile.get().equipment.id)
 
-
-            if(existLastMobile.isPresent){
+           val lastMobile =  if(existLastMobile.isPresent){
                 val lastMobiles = existLastMobile.get()
                 val updateLastMobile = LastCoordinateMobile(
                         id = lastMobiles.id,
@@ -53,21 +55,26 @@ class CoordinateProcessor(
                         route = routeMobile.get()
                         )
                 lastCoordinateMobileRepository.save(updateLastMobile)
-                updateLastMobile
                 log.info("Atualizou coordenada do Mobile ----------> [{}]", updateLastMobile)
+                updateLastMobile
             }else{
                 val route = routeMobile.get()
                 val newLast = LastCoordinateMobile(null, route.mobileEquipment, latitude = coordinate.latitude, longitude = coordinate.longitude,route = route, `when` = Date())
                 lastCoordinateMobileRepository.save(newLast)
                 log.info("Criou  coordenada do Mobile ----------> [{}]", routeMobile)
+                newLast
             }
 
-
-
+            if(lastCoordinate.isPresent){
+                setChanged()
+                notifyObservers(NotificationMobileDTO(lastMobile,lastCoordinate.get()))
+            }
         }
+
+
+
         val routeOptional = routeRepository.getRouteByEquipment_Id(coordinate.equipmentId)
         if(routeOptional.isPresent){
-            log.info("Está present [{}]", routeOptional)
             val route = routeOptional.get()
             val lastCoordinateOptional = lastCoordinateRepository.getLastCoordinateByEquipment_Id(coordinate.equipmentId)
             val lastCoordinate = if(lastCoordinateOptional.isPresent){
@@ -255,10 +262,13 @@ class CoordinateProcessor(
                     "\"datePing\":1599907140000" +
                     "}" +
                 "]"
+
         val listCoordinates = mapper.readValue(jsonContent, Array<Coordinate>::class.java).asList()
 
         this.addObserver(eventArrival)
+        this.addObserver(eventAwayEquipment)
 
+        log.info("Iniciate send coordinates")
         listCoordinates.forEach{
             Thread.sleep(500)
             receiveCoordinate(it)

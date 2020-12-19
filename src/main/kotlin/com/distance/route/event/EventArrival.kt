@@ -43,7 +43,7 @@ class EventArrival(
     }
 
     override fun update(o: Observable?, notificationDto: Any?) {
-        if(notificationDto != null){
+        if(notificationDto != null && notificationDto is NotificationDto){
             processCoordinate(notificationDto as NotificationDto)
         }
     }
