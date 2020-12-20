@@ -4,6 +4,7 @@ import com.distance.route.domain.AwayEquipment
 import com.distance.route.domain.Event
 import com.distance.route.domain.enum.EventType
 import com.distance.route.repository.AwayEquipmentRepository
+import com.distance.route.repository.EventRepository
 import com.distance.route.repository.RouteRepository
 import com.distance.route.stream.NotificationMobileDTO
 import com.distance.route.util.haversineDistance
@@ -14,15 +15,14 @@ import java.util.*
 
 @Component
 class EventAwayEquipment(
-        val awayEquipmentRepository: AwayEquipmentRepository,
-        val routeRepository: RouteRepository
+       private val awayEquipmentRepository: AwayEquipmentRepository,
+       private val routeRepository: RouteRepository,
+       private val eventRepository: EventRepository
 ):Observer {
 
     private val log = LoggerFactory.getLogger(EventAwayEquipment::class.java)
 
     fun processEvent(notificationMobileDTO: NotificationMobileDTO){
-
-
 
         val distance = haversineDistance(
                 notificationMobileDTO.lastCoordinate.latitude,
@@ -91,11 +91,14 @@ class EventAwayEquipment(
                         &&
                         (currentDate.hours >= dateAway.hours || currentDate.minutes   >= dateAway.minutes )
                 ){
-                    if(currentDate.minutes - dateAway.minutes >= 10){
+                    if(currentDate.minutes - dateAway.minutes >= 0){
                         // throw event
                         log.info("========================")
-                        log.info(" NOVO ALERTA CRIADOOOOO")
+                        log.info(" ALERTA DE PERIGOOOOOO")
                         log.info("========================")
+                        val eventAway = Event(null, eventType = EventType.AWAY, `when` = Date())
+                        eventRepository.save(eventAway)
+                        System.exit(0)
                     }
                 }
 
