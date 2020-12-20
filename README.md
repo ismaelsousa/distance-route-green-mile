@@ -6,6 +6,8 @@
 
 ## Route
 
+- From the first stop the mobile is away until the last coordinate at which it returns to transport
+
 <p align='center'>
  <img src='https://user-images.githubusercontent.com/28990749/102723107-b8fef900-42ba-11eb-8e4f-001f89da5ae0.png'/>
 </p>
