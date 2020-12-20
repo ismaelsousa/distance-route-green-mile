@@ -41,7 +41,9 @@ class EventAwayEquipment(
             val hourSentCoordinate = notificationMobileDTO.lastCoordinateMobile.`when`.hours
             val scheduleWork = (hourSentCoordinate >= 7 &&  hourSentCoordinate <= 12) || ( hourSentCoordinate >= 14 && hourSentCoordinate<=18)
             if( !scheduleWork ){
+                log.info("============================")
                 log.info("Não está na hora do trabalho")
+                log.info("============================\n")
                 return
             }
 
@@ -62,7 +64,9 @@ class EventAwayEquipment(
             }
 
             if(stops.isNotEmpty()){
+                log.info("=======================================================")
                 log.info("Está em uma parada, não precisa mandar evento de alerta")
+                log.info("=======================================================\n")
                 return
             }
 
@@ -89,16 +93,16 @@ class EventAwayEquipment(
                         &&
                         dateAway.day == dateAway.day
                         &&
-                        (currentDate.hours >= dateAway.hours || currentDate.minutes   >= dateAway.minutes )
+                        (currentDate.hours >= dateAway.hours || currentDate.seconds   >= dateAway.seconds )
                 ){
-                    if(currentDate.minutes - dateAway.minutes >= 10){
+                    if(currentDate.seconds - dateAway.seconds >= 10){
                         // throw event
-                        log.info("========================")
-                        log.info(" ALERTA DE PERIGOOOOOO")
-                        log.info("========================")
+                        log.info("===============================")
+                        log.info("|    ALERTA DE PERIGO ENVIADO |")
+                        log.info("===============================\n")
                         val eventAway = Event(null, eventType = EventType.AWAY, `when` = Date())
                         eventRepository.save(eventAway)
-                        System.exit(0)
+
                     }
                 }
 
@@ -106,12 +110,19 @@ class EventAwayEquipment(
                 // criar awayEquipment
                 val newAwayEquipment = AwayEquipment(null, notificationMobileDTO.lastCoordinate.route, `when` = Date(), active = true, type = EventType.AWAY)
                 awayEquipmentRepository.save(newAwayEquipment)
+                log.info("=============================")
+                log.info("|   POSSIVEL PERIGO - AWAY   |")
+                log.info("=============================\n")
             }
         }else{
             // Limpar último eventoAway
             val lastAwayEquipment = awayEquipmentRepository.getAwayEquipmentByRoute_Id(notificationMobileDTO.lastCoordinate.route.id)
             if(lastAwayEquipment.isPresent){
                 lastAwayEquipment.get().id?.let { awayEquipmentRepository.deleteById(it) }
+                log.info("================================")
+                log.info("| MOTORISTA VOLTOU AO VEÍCULO  |")
+                log.info("===============================\n")
+                System.exit(0)
             }
         }
 
@@ -119,7 +130,6 @@ class EventAwayEquipment(
     }
     override fun update(o: Observable?, notificationMobileDTO: Any?) {
        if(notificationMobileDTO!=null && notificationMobileDTO is NotificationMobileDTO){
-           log.info("Chegouuu [{}]", notificationMobileDTO )
            processEvent(notificationMobileDTO)
        }
     }

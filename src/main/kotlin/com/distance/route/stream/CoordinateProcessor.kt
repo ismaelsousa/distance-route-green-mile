@@ -30,7 +30,7 @@ class CoordinateProcessor(
     * Está recebendo dados do kafka
     * */
     fun receiveCoordinate(coordinate: Coordinate){
-        log.info("Coordinate received: [{}] ", coordinate)
+      //  log.info("Coordinate received: [{}] ", coordinate)
         val routeMobile = routeRepository.getRouteByMobileEquipment_Id((coordinate.equipmentId))
 
         /*
@@ -55,13 +55,13 @@ class CoordinateProcessor(
                         route = routeMobile.get()
                         )
                 lastCoordinateMobileRepository.save(updateLastMobile)
-                log.info("Atualizou coordenada do Mobile ----------> [{}]", updateLastMobile)
+              //  log.info("Atualizou coordenada do Mobile ----------> [{}]", updateLastMobile)
                 updateLastMobile
             }else{
                 val route = routeMobile.get()
                 val newLast = LastCoordinateMobile(null, route.mobileEquipment, latitude = coordinate.latitude, longitude = coordinate.longitude,route = route, `when` = Date())
                 lastCoordinateMobileRepository.save(newLast)
-                log.info("Criou  coordenada do Mobile ----------> [{}]", routeMobile)
+              //  log.info("Criou  coordenada do Mobile ----------> [{}]", routeMobile)
                 newLast
             }
 
@@ -95,7 +95,7 @@ class CoordinateProcessor(
 
     }
 
-    @Scheduled(fixedDelay = 10000, initialDelay = 5000)
+    @Scheduled(fixedDelay = 100000, initialDelay = 5000)
     fun consumeCoordinates(){
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
@@ -270,6 +270,8 @@ class CoordinateProcessor(
                     "}" +
                 "]"
 
+
+
         val myRoute = "[" +
                 "{" +
                 "\"equipmentId\":10000," +
@@ -277,18 +279,32 @@ class CoordinateProcessor(
                 "\"longitude\":-37.9894671," +
                 "\"datePing\":1599905040000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905040000}," +
 
-
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.0724181," +
                 "\"longitude\":-37.9897523," +
                 "\"datePing\":1599905160000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905160000}," +
 
-
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.0730062," +
                 "\"longitude\":-37.9900684," +
+                "\"datePing\":1599905220000" +
+                "}," +
+                "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
                 "\"datePing\":1599905220000" +
                 "}," +
 
@@ -300,62 +316,122 @@ class CoordinateProcessor(
                 "\"longitude\":-37.9903889," +
                 "\"datePing\":1599905280000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905280000}," +
 
 
-
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.0747838," +
                 "\"longitude\":-37.9908696," +
                 "\"datePing\":1599905340000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905340000}," +
 
 
+
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.0751817," +
                 "\"longitude\":-37.9900618," +
                 "\"datePing\":1599905400000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905400000}," +
 
 
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.0757217," +
                 "\"longitude\":-37.9889622," +
                 "\"datePing\":1599905520000}," +
+
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905520000}," +
 
 
+
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.076194," +
                 "\"longitude\":-37.9879722," +
                 "\"datePing\":1599905580000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905580000}," +
 
+
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\": -5.0765525," +
                 "\"longitude\":-37.9872676," +
                 "\"datePing\":1599905640000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905640000}," +
 
 
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.0769001," +
                 "\"longitude\":-37.9864928," +
                 "\"datePing\":1599905700000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905700000}," +
 
+
+
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.0773199," +
                 "\"longitude\":-37.9857663," +
                 "\"datePing\":1599905760000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0705261," +
+                "\"longitude\":-37.9918204," +
+                "\"datePing\":1599905760000}," +
 
+
+
+                "{" +
                 "\"equipmentId\":10000," +
                 "\"latitude\":-5.0774861," +
                 "\"longitude\":-37.9851802," +
                 "\"datePing\":1599905820000}," +
                 "{" +
+                "\"equipmentId\":13," +
+                "\"latitude\":-5.0774861," +
+                "\"longitude\":-37.9851802," +
+                "\"datePing\":1599905820000}," +
 
+
+
+                "{" +
                 "\"equipmentId\":10000," +
+                "\"latitude\":-5.0775801," +
+                "\"longitude\":-37.9848137," +
+                "\"datePing\":1599905880000" +
+                "}," +
+                "{" +
+                "\"equipmentId\":13," +
                 "\"latitude\":-5.0775801," +
                 "\"longitude\":-37.9848137," +
                 "\"datePing\":1599905880000" +
@@ -365,13 +441,15 @@ class CoordinateProcessor(
 
 
         val listCoordinates = mapper.readValue(myRoute, Array<Coordinate>::class.java).asList()
-
+        log.info("==========================\n")
+        log.info("Iniciate send coordinates")
+        log.info("==========================\n")
         this.addObserver(eventArrival)
         this.addObserver(eventAwayEquipment)
 
-        log.info("Iniciate send coordinates")
+
         listCoordinates.forEach{
-            Thread.sleep(200)
+            Thread.sleep(1500)
             receiveCoordinate(it)
         }
     }

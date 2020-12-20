@@ -32,7 +32,9 @@ class EventArrival(
             }.map {
                 val updateStop = it.copy(arrivalAt = Date())
                 stopRepository.save(updateStop)
+                log.info("==========================================")
                 log.info("Driver Arrival on Stop [{}]", it.address)
+                log.info("========================================\n")
                 val newEvent = Event(eventType = EventType.ARRIVE, `when` = Date(), stopId = it.id )
                 eventRepository.save(newEvent)
             }
