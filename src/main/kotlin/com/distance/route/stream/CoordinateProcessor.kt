@@ -30,7 +30,7 @@ class CoordinateProcessor(
     * Está recebendo dados do kafka
     * */
     fun receiveCoordinate(coordinate: Coordinate){
-        // log.info("Coordinate received: [{}] ", coordinate)
+        // log.info("Coordinate received: [{}] ", coordinate.datePing.hours)
         val routeMobile = routeRepository.getRouteByMobileEquipment_Id((coordinate.equipmentId))
 
         /*
@@ -121,10 +121,17 @@ class CoordinateProcessor(
                   "\"longitude\":-38.513433," +
                   "\"datePing\":1599905160000}," +
                 "{" +
+                    "\"equipmentId\":13," +
+                    "\"latitude\":-3.752637," +
+                    "\"longitude\":-38.513635," +
+                    "\"datePing\":1599905220000" +
+                "}," +
+                "{" +
                     "\"equipmentId\":10000," +
                     "\"latitude\":-3.752637," +
                     "\"longitude\":-38.513635," +
-                    "\"datePing\":1599905220000}," +
+                    "\"datePing\":1599905220000" +
+                "}," +
                 "{" +
                     "\"equipmentId\":10000," +
                     "\"latitude\":-3.752637," +

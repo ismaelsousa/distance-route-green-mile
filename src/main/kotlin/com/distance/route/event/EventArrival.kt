@@ -35,6 +35,7 @@ class EventArrival(
                 val updateStop = it.copy(arrivalAt = Date())
                 stopRepository.save(updateStop)
                 log.info("Driver Arrival on Stop [{}]", it)
+                log.info("Driver Arrival on coordinate [{}]", coordinate)
                 val newEvent = Event(eventType = EventType.ARRIVE, `when` = Date(), stopId = it.id )
                 eventRepository.save(newEvent)
             }
