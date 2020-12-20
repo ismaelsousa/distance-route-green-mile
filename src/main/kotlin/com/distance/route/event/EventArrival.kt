@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.util.*
 
-const val geoFence = 0.2
+const val geoFence = 0.05
 
 @Component
 class EventArrival(
@@ -23,10 +23,8 @@ class EventArrival(
 
 
     fun processCoordinate(notificationDto: NotificationDto){
-        val lastCoordinate = notificationDto.lastCoordinate
         val coordinate = notificationDto.coordinate
 
-        if(lastCoordinate.latitude == coordinate.latitude && lastCoordinate.longitude == coordinate.longitude){
             val route = routeRepository.getRouteByEquipment_Id(notificationDto.coordinate.equipmentId).get()
             route.stops.filter { stop ->
                 val distance = haversineDistance(stop.latitude, stop.longitude, coordinate.latitude, coordinate.longitude)
@@ -34,13 +32,11 @@ class EventArrival(
             }.map {
                 val updateStop = it.copy(arrivalAt = Date())
                 stopRepository.save(updateStop)
-                log.info("Driver Arrival on Stop [{}]", it)
-                log.info("Driver Arrival on coordinate [{}]", coordinate)
+                log.info("Driver Arrival on Stop [{}]", it.address)
                 val newEvent = Event(eventType = EventType.ARRIVE, `when` = Date(), stopId = it.id )
                 eventRepository.save(newEvent)
             }
 
-        }
     }
 
     override fun update(o: Observable?, notificationDto: Any?) {

@@ -91,7 +91,7 @@ class EventAwayEquipment(
                         &&
                         (currentDate.hours >= dateAway.hours || currentDate.minutes   >= dateAway.minutes )
                 ){
-                    if(currentDate.minutes - dateAway.minutes >= 0){
+                    if(currentDate.minutes - dateAway.minutes >= 10){
                         // throw event
                         log.info("========================")
                         log.info(" ALERTA DE PERIGOOOOOO")

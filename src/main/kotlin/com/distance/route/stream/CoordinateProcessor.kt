@@ -30,7 +30,7 @@ class CoordinateProcessor(
     * Está recebendo dados do kafka
     * */
     fun receiveCoordinate(coordinate: Coordinate){
-        // log.info("Coordinate received: [{}] ", coordinate.datePing.hours)
+        log.info("Coordinate received: [{}] ", coordinate)
         val routeMobile = routeRepository.getRouteByMobileEquipment_Id((coordinate.equipmentId))
 
         /*
@@ -51,7 +51,7 @@ class CoordinateProcessor(
                         mobileEquipment = lastMobiles.mobileEquipment,
                         latitude = coordinate.latitude,
                         longitude = coordinate.longitude,
-                        `when` = coordinate.datePing,
+                        `when` = Date(),
                         route = routeMobile.get()
                         )
                 lastCoordinateMobileRepository.save(updateLastMobile)
@@ -79,12 +79,12 @@ class CoordinateProcessor(
             val lastCoordinateOptional = lastCoordinateRepository.getLastCoordinateByEquipment_Id(coordinate.equipmentId)
             val lastCoordinate = if(lastCoordinateOptional.isPresent){
                 val lastCoordinate = lastCoordinateOptional.get()
-                val updatedLastCoordinate = lastCoordinate.copy(latitude = coordinate.latitude, longitude = coordinate.longitude, `when`=coordinate.datePing)
+                val updatedLastCoordinate = lastCoordinate.copy(latitude = coordinate.latitude, longitude = coordinate.longitude, `when`=Date())
                 lastCoordinateRepository.save(updatedLastCoordinate)
                 lastCoordinate
             } else{
                 val equipment = Equipment(id=coordinate.equipmentId)
-                val last = LastCoordinate(null,  equipment, coordinate.longitude, coordinate.latitude, Date(),  route)
+                val last = LastCoordinate(null,  equipment, coordinate.latitude, coordinate.longitude, Date(),  route)
                 lastCoordinateRepository.save(last)
                 last
             }
@@ -270,7 +270,101 @@ class CoordinateProcessor(
                     "}" +
                 "]"
 
-        val listCoordinates = mapper.readValue(jsonContent, Array<Coordinate>::class.java).asList()
+        val myRoute = "[" +
+                "{" +
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0720683," +
+                "\"longitude\":-37.9894671," +
+                "\"datePing\":1599905040000}," +
+                "{" +
+
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0724181," +
+                "\"longitude\":-37.9897523," +
+                "\"datePing\":1599905160000}," +
+                "{" +
+
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0730062," +
+                "\"longitude\":-37.9900684," +
+                "\"datePing\":1599905220000" +
+                "}," +
+
+
+
+                "{" +
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0737474," +
+                "\"longitude\":-37.9903889," +
+                "\"datePing\":1599905280000}," +
+                "{" +
+
+
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0747838," +
+                "\"longitude\":-37.9908696," +
+                "\"datePing\":1599905340000}," +
+                "{" +
+
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0751817," +
+                "\"longitude\":-37.9900618," +
+                "\"datePing\":1599905400000}," +
+                "{" +
+
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0757217," +
+                "\"longitude\":-37.9889622," +
+                "\"datePing\":1599905520000}," +
+                "{" +
+
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.076194," +
+                "\"longitude\":-37.9879722," +
+                "\"datePing\":1599905580000}," +
+                "{" +
+
+                "\"equipmentId\":10000," +
+                "\"latitude\": -5.0765525," +
+                "\"longitude\":-37.9872676," +
+                "\"datePing\":1599905640000}," +
+                "{" +
+
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0769001," +
+                "\"longitude\":-37.9864928," +
+                "\"datePing\":1599905700000}," +
+                "{" +
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0773199," +
+                "\"longitude\":-37.9857663," +
+                "\"datePing\":1599905760000}," +
+                "{" +
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0774861," +
+                "\"longitude\":-37.9851802," +
+                "\"datePing\":1599905820000}," +
+                "{" +
+
+                "\"equipmentId\":10000," +
+                "\"latitude\":-5.0775801," +
+                "\"longitude\":-37.9848137," +
+                "\"datePing\":1599905880000" +
+                "}" +
+               "]"
+
+
+
+        val listCoordinates = mapper.readValue(myRoute, Array<Coordinate>::class.java).asList()
 
         this.addObserver(eventArrival)
         this.addObserver(eventAwayEquipment)
