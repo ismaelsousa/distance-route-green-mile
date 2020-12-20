@@ -1,6 +1,6 @@
 
 <p align='center'>
-  <h1>Throw an event when the driver moves away from transportation</h1>
+  <h1 align='center'>Throw an event when the driver moves away from transportation</h1>
  <img src='https://user-images.githubusercontent.com/28990749/102723069-6de4e600-42ba-11eb-965f-e820d4af9b30.png'/>
 </p>
 
