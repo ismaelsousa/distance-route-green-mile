@@ -108,7 +108,7 @@ class EventAwayEquipment(
 
             }else{
                 // criar awayEquipment
-                val newAwayEquipment = AwayEquipment(null, notificationMobileDTO.lastCoordinate.route, `when` = Date(), active = true, type = EventType.AWAY)
+                val newAwayEquipment = AwayEquipment(null, notificationMobileDTO.lastCoordinate.route, `when` = Date())
                 awayEquipmentRepository.save(newAwayEquipment)
                 log.info("=============================")
                 log.info("|   POSSIVEL PERIGO - AWAY   |")

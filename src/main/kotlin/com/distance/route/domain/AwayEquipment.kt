@@ -1,6 +1,5 @@
 package com.distance.route.domain
 
-import com.distance.route.domain.enum.EventType
 import java.util.*
 import javax.persistence.*
 
@@ -12,7 +11,5 @@ class AwayEquipment(
         @OneToOne
         @JoinColumn(name="route_id", referencedColumnName = "id")
         val route: Route,
-        val `when`: Date=Date(),
-        val active:Boolean=false,
-        type: EventType
+        val `when`: Date=Date()
 )
