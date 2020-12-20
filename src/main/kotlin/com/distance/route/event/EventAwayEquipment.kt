@@ -74,11 +74,41 @@ class EventAwayEquipment(
 
             if(away.isPresent){
 
-                val newAwayEquipment = AwayEquipment(null, notificationMobileDTO.lastCoordinate.route, `when` = Date(), active = true, type = EventType.AWAY)
-                awayEquipmentRepository.save(newAwayEquipment)
+                // Se data que awayEquip >= 10 min
+                // NewEvent (Danger)
+                val dateAway = away.get().`when`
+
+
+                val currentDate = Date()
+
+
+                if(
+                        currentDate.year == dateAway.year
+                        &&
+                        currentDate.month == dateAway.month
+                        &&
+                        dateAway.day == dateAway.day
+                        &&
+                        (currentDate.hours >= dateAway.hours || currentDate.minutes   >= dateAway.minutes )
+                ){
+                    if(currentDate.minutes - dateAway.minutes >= 10){
+                        // throw event
+                        log.info("========================")
+                        log.info(" NOVO ALERTA CRIADOOOOO")
+                        log.info("========================")
+                    }
+                }
 
             }else{
                 // criar awayEquipment
+                val newAwayEquipment = AwayEquipment(null, notificationMobileDTO.lastCoordinate.route, `when` = Date(), active = true, type = EventType.AWAY)
+                awayEquipmentRepository.save(newAwayEquipment)
+            }
+        }else{
+            // Limpar último eventoAway
+            val lastAwayEquipment = awayEquipmentRepository.getAwayEquipmentByRoute_Id(notificationMobileDTO.lastCoordinate.route.id)
+            if(lastAwayEquipment.isPresent){
+                lastAwayEquipment.get().id?.let { awayEquipmentRepository.deleteById(it) }
             }
         }
 
