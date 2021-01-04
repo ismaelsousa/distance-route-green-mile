@@ -95,7 +95,7 @@ class EventAwayEquipment(
                         &&
                         (currentDate.hours >= dateAway.hours || currentDate.seconds   >= dateAway.seconds )
                 ){
-                    if(currentDate.seconds - dateAway.seconds >= 10){
+                    if(currentDate.seconds - dateAway.seconds >= 10){ //2:10
                         // throw event
                         log.info("===============================")
                         log.info("|    ALERTA DE PERIGO ENVIADO |")
@@ -108,7 +108,7 @@ class EventAwayEquipment(
 
             }else{
                 // criar awayEquipment
-                val newAwayEquipment = AwayEquipment(null, notificationMobileDTO.lastCoordinate.route, `when` = Date())
+                val newAwayEquipment = AwayEquipment(null, notificationMobileDTO.lastCoordinate.route, `when` = Date()) //2:00
                 awayEquipmentRepository.save(newAwayEquipment)
                 log.info("=============================")
                 log.info("|   POSSIVEL PERIGO - AWAY   |")
